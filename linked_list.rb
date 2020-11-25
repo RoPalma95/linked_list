@@ -15,12 +15,15 @@ class LinkedList
     @size = 0
   end
 
-  def create_node(value)
-    node = Node.new(value)
-    node.pointer = node
+  private
+
+  def create_node(value, index = nil)
+    node = Node.new(value, index)
     self.size += 1
     node
   end
+
+  public
 
   def append(value) # adds new node containing 'value' to the end of the list
     node = create_node(value)
@@ -44,7 +47,24 @@ class LinkedList
     else
       self.head = node
     end
-    adjust_indices
+    adjust_indices("p")
+  end
+
+  def insert_at(value, index) # inserts the node with the provided 'value' at the given 'index'
+    if index > (size + 1)
+      puts "Index has to be #{size + 1} or lower."
+    elsif index == (size + 1)
+      self.append(value)
+    elsif index == 1
+      self.prepend(value)
+    else
+      previous_node = self.at(index - 1)
+      new_node = create_node(value, index)
+      next_node = self.at(index)
+      previous_node.next_node = new_node
+      new_node.next_node = next_node
+      adjust_indices("i", next_node)
+    end
   end
 
   def at(index) # return the node at the given index
@@ -55,7 +75,7 @@ class LinkedList
       until current_node.index == index
         current_node = current_node.next_node
       end
-      current_node.value
+      current_node
     end
   end
 
@@ -89,11 +109,18 @@ class LinkedList
     end
   end
 
-  def adjust_indices # fixes indices after prepending an element
-    current_node = head.next_node
-    until current_node.nil?
-      current_node.index += 1
-      current_node = current_node.next_node
+  def adjust_indices(insert_method, next_node = nil) # fixes indices after prepending or inserting an element
+    if insert_method == 'p'
+      current_node = head.next_node
+      until current_node.nil?
+        current_node.index += 1
+        current_node = current_node.next_node
+      end
+    else
+      until next_node.nil?
+        next_node.index += 1
+        next_node = next_node.next_node
+      end
     end
   end
 
@@ -103,44 +130,33 @@ class LinkedList
     else
       current_node = head
       (size - 1).times do 
-        print"(#{current_node.value}) -> "
+        print"( #{current_node.value} ) -> "
         current_node = current_node.next_node
       end
-      "(#{tail.value}) -> nil"
+      "( #{tail.value} ) -> nil"
     end
   end
 end
 
 class Node
-  attr_accessor :value, :pointer, :next_node, :index
+  attr_accessor :value, :next_node, :index
 
-  def initialize(value = nil)
+  def initialize(value = nil, index = nil)
     @value = value
-    @pointer = nil
     @next_node = nil
-    @index = nil
+    @index = index
   end
 end
 
 my_list = LinkedList.new
-my_list.append('A')
-my_list.append('B')
-my_list.prepend('b')
-my_list.append('C')
-my_list.append('D')
-my_list.prepend('a')
-# my_list.pop
-# my_list.pop
-# my_list.pop
+my_list.append(1)
+my_list.append(2)
+my_list.prepend(3)
+my_list.append(4)
+my_list.append(5)
+my_list.prepend(6)
+my_list.insert_at(7, 2)
+my_list.pop
 
-# p my_list.head
-puts my_list.contains?('A')
-puts my_list.contains?('B')
-puts my_list.contains?('C')
-puts my_list.contains?('D')
-puts my_list.contains?('E')
-puts my_list.contains?('a')
-puts my_list.contains?('b')
-puts my_list.contains?('c')
-puts my_list.contains?('d')
+puts my_list
 puts my_list.size
