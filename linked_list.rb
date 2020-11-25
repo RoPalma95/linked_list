@@ -41,7 +41,7 @@ class LinkedList
     else
       self.head = node
     end
-    adjust_indeces
+    adjust_indices
   end
 
   def at(index) # return the node at the given index
@@ -57,7 +57,13 @@ class LinkedList
   end
 
   def pop() # removes the last element from the list
-
+    current_node = head
+    (size - 2).times do
+      current_node = current_node.next_node
+    end
+    self.tail = current_node
+    tail.next_node = nil
+    self.size -= 1
   end
 
   def contains?(value) # boolean, true if the passed 'value' is in the list
@@ -80,7 +86,7 @@ class LinkedList
     end
   end
 
-  def adjust_indeces
+  def adjust_indices # fixes indices after prepending an element
     current_node = head.next_node
     until current_node.nil?
       current_node.index += 1
@@ -116,9 +122,14 @@ end
 my_list = LinkedList.new
 my_list.append('A')
 my_list.append('B')
-my_list.prepend('Rodri')
+my_list.prepend('b')
 my_list.append('C')
 my_list.append('D')
 my_list.prepend('a')
+my_list.pop
+my_list.pop
+my_list.pop
 
+# p my_list.head
 puts my_list
+puts my_list.size
