@@ -15,10 +15,15 @@ class LinkedList
     @size = 0
   end
 
-  def append(value) # adds new node containing 'value' to the end of the list
+  def create_node(value)
     node = Node.new(value)
     node.pointer = node
     self.size += 1
+    node
+  end
+
+  def append(value) # adds new node containing 'value' to the end of the list
+    node = create_node(value)
     node.index = size
     if head.nil?
       self.head = node
@@ -30,9 +35,7 @@ class LinkedList
   end
 
   def prepend(value) # adds new node containing 'value' to the start of the list
-    node = Node.new(value)
-    node.pointer = node
-    self.size += 1
+    node = create_node(value)
     node.index = 1
     node.next_node = head
     if head.nil?
@@ -126,10 +129,18 @@ my_list.prepend('b')
 my_list.append('C')
 my_list.append('D')
 my_list.prepend('a')
-my_list.pop
-my_list.pop
-my_list.pop
+# my_list.pop
+# my_list.pop
+# my_list.pop
 
 # p my_list.head
-puts my_list
+puts my_list.contains?('A')
+puts my_list.contains?('B')
+puts my_list.contains?('C')
+puts my_list.contains?('D')
+puts my_list.contains?('E')
+puts my_list.contains?('a')
+puts my_list.contains?('b')
+puts my_list.contains?('c')
+puts my_list.contains?('d')
 puts my_list.size
